@@ -189,37 +189,36 @@ function gameWon() {
 }
 
 let gameOver = false;
-let firstClick = true;
 
 function detectBombs() {
     for (let i = 0; i < iterator.length; i++) {
         for (let j = 0; j < iterator[i].length; j++) {
+            let num = 0;
+            if (j < iterator.length - 1 && iterator[i][j + 1].className === 'bomb') {
+                num++;
+            }
+            if (j > 0 && iterator[i][j - 1].className === 'bomb') {
+                num++;
+            }
+            if (i < iterator.length - 1 && j > 0 && iterator[i + 1][j - 1].className === 'bomb') {
+                num++;
+            }
+            if (i < iterator.length - 1 && iterator[i + 1][j].className === 'bomb') {
+                num++;
+            }
+            if (i < iterator.length - 1 && j < iterator.length - 1 && iterator[i + 1][j + 1].className === 'bomb') {
+                num++;
+            }
+            if (i > 0 && j < iterator.length - 1 && iterator[i - 1][j + 1].className === 'bomb') {
+                num++;
+            }
+            if (i > 0 && iterator[i - 1][j].className === 'bomb') {
+                num++;
+            }
+            if (i > 0 && j > 0 && iterator[i - 1][j - 1].className === 'bomb') {
+                num++; 
+            }
             iterator[i][j].addEventListener('click', function detectBomb() {
-                let num = 0;
-                if (j < iterator.length - 1 && iterator[i][j + 1].className === 'bomb') {
-                    num++;
-                }
-                if (j > 0 && iterator[i][j - 1].className === 'bomb') {
-                    num++;
-                }
-                if (i < iterator.length - 1 && j > 0 && iterator[i + 1][j - 1].className === 'bomb') {
-                    num++;
-                }
-                if (i < iterator.length - 1 && iterator[i + 1][j].className === 'bomb') {
-                    num++;
-                }
-                if (i < iterator.length - 1 && j < iterator.length - 1 && iterator[i + 1][j + 1].className === 'bomb') {
-                    num++;
-                }
-                if (i > 0 && j < iterator.length - 1 && iterator[i - 1][j + 1].className === 'bomb') {
-                    num++;
-                }
-                if (i > 0 && iterator[i - 1][j].className === 'bomb') {
-                    num++;
-                }
-                if (i > 0 && j > 0 && iterator[i - 1][j - 1].className === 'bomb') {
-                    num++; 
-                }
                 if (num > 0) {
                     iterator[i][j].textContent = num;
                 }
@@ -238,7 +237,6 @@ function detectBombs() {
                 }
                 if (timesToClick > 0 && iterator[i][j].className !== 'bomb' && gameOver === false && iterator[i][j].className !== 'clicked') {
                     timesToClick--;
-                    console.log(timesToClick);
                 }
                 if (num === 0 && iterator[i][j].className !== 'bomb' && iterator[i][j].style.backgroundColor !== 'black' && iterator[i][j].className !== 'clear') {
                     iterator[i][j].textContent = '';
