@@ -35,17 +35,18 @@ function removeSquares() {
 }
 
 let bombArr = [];
+
 function generateBombs() {
     bombArr = [];
     for (let i = 0; i < gameSettings.bombs; i++) {
         let randomNum = Math.floor(Math.random() * gameSettings.gameSize);
         let randomNum2 = Math.floor(Math.random() * gameSettings.gameSize);
-        let bomb = iterator[randomNum][randomNum2];
+        let bomb = boxes[randomNum][randomNum2];
         for (let i = 0; i < bombArr.length; i++) {
             if (bomb === bombArr[i]) {
                 let newRandomNum = Math.floor(Math.random() * gameSettings.gameSize);
                 let newRandomNum2 = Math.floor(Math.random() * gameSettings.gameSize);
-                bomb = iterator[newRandomNum][newRandomNum2];
+                bomb = boxes[newRandomNum][newRandomNum2];
             }
         }
         bombArr.push(bomb);
@@ -68,6 +69,7 @@ selectedDropDown.addEventListener('change', function() {
         score.style.width = main.style.width;
         makeSquares(main, squareAmount, setIds, generateBombs);
         gameOver = false;
+        firstClick = true;
     } else if (difficultyToNumber === 1){
         removeSquares();
         gameSettings.gameSize = 6;
@@ -79,6 +81,7 @@ selectedDropDown.addEventListener('change', function() {
         score.style.width = main.style.width;
         makeSquares(main, squareAmount, setIds, generateBombs);
         gameOver = false;
+        firstClick = true;
     } else if (difficultyToNumber === 2){
         removeSquares();
         gameSettings.gameSize = 7;
@@ -90,6 +93,7 @@ selectedDropDown.addEventListener('change', function() {
         score.style.width = main.style.width;
         makeSquares(main, squareAmount, setIds, generateBombs);
         gameOver = false;
+        firstClick = true;
     } else {
         removeSquares();
         gameSettings.gameSize = 8;
@@ -101,11 +105,12 @@ selectedDropDown.addEventListener('change', function() {
         score.style.width = main.style.width;
         makeSquares(main, squareAmount, setIds, generateBombs);
         gameOver = false;
+        firstClick = true;
     }
 }, false);
 
 let tempArray = [];
-let iterator = [];
+let boxes = [];
 
 makeSquares(main, squareAmount, setIds, generateBombs);
 
@@ -119,7 +124,7 @@ function setIds() {
     row7 = [];
     row8 = [];
     tempArray = [];
-    iterator = [];
+    boxes = [];
     let squaresArray = document.querySelectorAll('div');
     for (let i = 0; i < squaresArray.length; i++) {
         if (i < (gameSettings.gameSize)) {
@@ -158,7 +163,7 @@ function setIds() {
             tempArray.push(row8);
             for (let i = 0; i < 8; i++) {
                 if (tempArray[i].length > 4) {
-                    iterator.push(tempArray[i]);
+                    boxes.push(tempArray[i]);
                 }
             }
         }
@@ -172,12 +177,10 @@ const paragraphs = document.querySelectorAll('p');
 
 function gameWon() {
     winCount++;
-    paragraphs[0].textContent = `You have won
-    ${winCount} 
-    times`;
-    for (let j = 0; j < iterator.length; j++) {
-        for (let k = 0; k < iterator[j].length; k++) {
-            iterator[j][k].style.cursor = 'default';
+    paragraphs[0].textContent = `Wins: ${winCount}`;
+    for (let j = 0; j < boxes.length; j++) {
+        for (let k = 0; k < boxes[j].length; k++) {
+            boxes[j][k].style.cursor = 'default';
         }
     }
     for (let i = 0; i < bombArr.length; i++) {
@@ -189,74 +192,184 @@ function gameWon() {
 }
 
 let gameOver = false;
+let firstClick = true;
 
 function detectBombs() {
-    for (let i = 0; i < iterator.length; i++) {
-        for (let j = 0; j < iterator[i].length; j++) {
+    for (let i = 0; i < boxes.length; i++) {
+        for (let j = 0; j < boxes[i].length; j++) {
             let num = 0;
-            if (j < iterator.length - 1 && iterator[i][j + 1].className === 'bomb') {
+            if (j < boxes.length - 1 && boxes[i][j + 1].className === 'bomb') {
                 num++;
             }
-            if (j > 0 && iterator[i][j - 1].className === 'bomb') {
+            if (j > 0 && boxes[i][j - 1].className === 'bomb') {
                 num++;
             }
-            if (i < iterator.length - 1 && j > 0 && iterator[i + 1][j - 1].className === 'bomb') {
+            if (i < boxes.length - 1 && j > 0 && boxes[i + 1][j - 1].className === 'bomb') {
                 num++;
             }
-            if (i < iterator.length - 1 && iterator[i + 1][j].className === 'bomb') {
+            if (i < boxes.length - 1 && boxes[i + 1][j].className === 'bomb') {
                 num++;
             }
-            if (i < iterator.length - 1 && j < iterator.length - 1 && iterator[i + 1][j + 1].className === 'bomb') {
+            if (i < boxes.length - 1 && j < boxes.length - 1 && boxes[i + 1][j + 1].className === 'bomb') {
                 num++;
             }
-            if (i > 0 && j < iterator.length - 1 && iterator[i - 1][j + 1].className === 'bomb') {
+            if (i > 0 && j < boxes.length - 1 && boxes[i - 1][j + 1].className === 'bomb') {
                 num++;
             }
-            if (i > 0 && iterator[i - 1][j].className === 'bomb') {
+            if (i > 0 && boxes[i - 1][j].className === 'bomb') {
                 num++;
             }
-            if (i > 0 && j > 0 && iterator[i - 1][j - 1].className === 'bomb') {
+            if (i > 0 && j > 0 && boxes[i - 1][j - 1].className === 'bomb') {
                 num++; 
             }
-            iterator[i][j].addEventListener('click', function detectBomb() {
-                if (num > 0) {
-                    iterator[i][j].textContent = num;
+            if (boxes[i][j].className !== 'bomb') {
+                boxes[i][j].className = num;
+            }
+            boxes[i][j].addEventListener('click', function detectBomb() {
+                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i][j + 1].classList.contains('0')) {
+                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j + 1].textContent = '';
+                        timesToClick--;
+                    } else {
+                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
+                        boxes[i][j + 1].classList.add('clicked');
+                        boxes[i][j + 1].style.backgroundColor = 'green';
+                        timesToClick--;
+                    }
                 }
-                if (iterator[i][j].className === 'bomb') {
-                    iterator[i][j].textContent = '💣';
-                    iterator[i][j].style.backgroundColor = 'red';
-                    iterator[i][j].style.cursor = 'default';
+                if (firstClick && j > 0 && boxes[i][j - 1].className !== 'bomb') {
+                    if (boxes[i][j - 1].classList.contains('0')) {
+                        boxes[i][j - 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j - 1].textContent = '';
+                        timesToClick--;
+                    } else {
+                        boxes[i][j - 1].textContent = boxes[i][j - 1].className;
+                        boxes[i][j - 1].classList.add('clicked');
+                        boxes[i][j - 1].style.backgroundColor = 'green';
+                        timesToClick--;
+                    }
+                }
+                if (firstClick && i < boxes.length - 1 && boxes[i + 1][j].className !== 'bomb') {
+                    if (boxes[i + 1][j].classList.contains('0')) {
+                        boxes[i + 1][j].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i + 1][j].textContent = '';
+                        timesToClick--;
+                    } else {
+                        boxes[i + 1][j].textContent = boxes[i + 1][j].className;
+                        boxes[i + 1][j].classList.add('clicked');
+                        boxes[i + 1][j].style.backgroundColor = 'green';
+                        timesToClick--;
+                    }
+                }
+                if (firstClick && j > 0 && boxes[i - 1][j].className !== 'bomb') {
+                    if (boxes[i - 1][j].classList.contains('0')) {
+                        boxes[i - 1][j].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i - 1][j].textContent = '';
+                        timesToClick--;
+                    } else {
+                        boxes[i - 1][j].textContent = boxes[i - 1][j].className;
+                        boxes[i - 1][j].classList.add('clicked');
+                        boxes[i - 1][j].style.backgroundColor = 'green';
+                        timesToClick--;
+                    }
+                }
+                if (firstClick && j > 0 && i > boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i - 1][j + 1].classList.contains('0')) {
+                        boxes[i - 1][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i - 1][j + 1].textContent = '';
+                        timesToClick--;
+                    } else {
+                        boxes[i - 1][j + 1].textContent = boxes[i - 1][j + 1].className;
+                        boxes[i - 1][j + 1].classList.add('clicked');
+                        boxes[i - 1][j + 1].style.backgroundColor = 'green';
+                        timesToClick--;
+                    }
+                    firstClick = false;
+                }
+                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i][j + 1].classList.contains('0')) {
+                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j + 1].textContent = '';
+                    } else {
+                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
+                        boxes[i][j + 1].classList.add('clicked');
+                        boxes[i][j + 1].style.backgroundColor = 'green';
+                    }
+                    firstClick = false;
+                }
+                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i][j + 1].classList.contains('0')) {
+                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j + 1].textContent = '';
+                    } else {
+                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
+                        boxes[i][j + 1].classList.add('clicked');
+                        boxes[i][j + 1].style.backgroundColor = 'green';
+                    }
+                    firstClick = false;
+                }
+                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i][j + 1].classList.contains('0')) {
+                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j + 1].textContent = '';
+                    } else {
+                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
+                        boxes[i][j + 1].classList.add('clicked');
+                        boxes[i][j + 1].style.backgroundColor = 'green';
+                    }
+                    firstClick = false;
+                }
+                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                    if (boxes[i][j + 1].classList.contains('0')) {
+                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j + 1].textContent = '';
+                    } else {
+                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
+                        boxes[i][j + 1].classList.add('clicked');
+                        boxes[i][j + 1].style.backgroundColor = 'green';
+                    }
+                    firstClick = false;
+                }
+                if (num > 0) {
+                    boxes[i][j].textContent = num;
+                }
+                if (boxes[i][j].className === 'bomb') {
+                    boxes[i][j].textContent = '💣';
+                    boxes[i][j].style.backgroundColor = 'red';
+                    boxes[i][j].style.cursor = 'default';
                     bombClicked();
                     explosionTime();
                     gameOver = true;
                     lossCount++;
-                    paragraphs[1].textContent = `You have lost ${lossCount} times`;
+                    paragraphs[1].textContent = `Losses: ${lossCount}`;
                 }
-                if (timesToClick === 1 && iterator[i][j].textContent !== '💣' && gameOver === false) {
-                    gameWon(iterator[i][j]);
+                if (timesToClick === 1 && boxes[i][j].textContent !== '💣' && gameOver === false) {
+                    gameWon(boxes[i][j]);
                 }
-                if (timesToClick > 0 && iterator[i][j].className !== 'bomb' && gameOver === false && iterator[i][j].className !== 'clicked') {
+                if (timesToClick > 0 && boxes[i][j].className !== 'bomb' && gameOver === false && !(boxes[i][j].classList.contains('clicked'))) {
                     timesToClick--;
+                    firstClick = false;
                 }
-                if (num === 0 && iterator[i][j].className !== 'bomb' && iterator[i][j].style.backgroundColor !== 'black' && iterator[i][j].className !== 'clear') {
-                    iterator[i][j].textContent = '';
-                    iterator[i][j].style.backgroundColor = 'darkSeaGreen';
-                    iterator[i][j].classList.add('clicked');
+                if (num === 0 && boxes[i][j].className !== 'bomb' && boxes[i][j].style.backgroundColor !== 'black' && boxes[i][j].className !== 'clear') {
+                    boxes[i][j].textContent = '';
+                    boxes[i][j].style.backgroundColor = 'darkSeaGreen';
+                    boxes[i][j].classList.add('clicked');
                 }
-                if (num > 0 && iterator[i][j].className !== 'bomb' && iterator[i][j].style.backgroundColor !== 'black') {
-                    iterator[i][j].textContent = num;
-                    iterator[i][j].style.backgroundColor = 'green';
-                    iterator[i][j].classList.add('clicked');
+                if (num > 0 && boxes[i][j].className !== 'bomb' && boxes[i][j].style.backgroundColor !== 'black') {
+                    boxes[i][j].textContent = num;
+                    boxes[i][j].style.backgroundColor = 'green';
+                    boxes[i][j].classList.add('clicked');
                 }
             });
-            iterator[i][j].addEventListener('contextmenu', function(e) {
+            boxes[i][j].addEventListener('contextmenu', function(e) {
                 e.preventDefault();
-                if (iterator[i][j].textContent === '') {
-                    iterator[i][j].textContent = '🚩';
+                if (boxes[i][j].textContent === '') {
+                    boxes[i][j].textContent = '🚩';
                     return;
                 }
-                if (iterator[i][j].textContent === '🚩') {
-                    iterator[i][j].textContent = '';
+                if (boxes[i][j].textContent === '🚩') {
+                    boxes[i][j].textContent = '';
                 }
             }, false);
         }
@@ -266,21 +379,20 @@ function detectBombs() {
 let smallArray = [];
 
 function bombClicked() {
-    for (let i = 0; i < iterator.length; i++) {
-        for (let j = 0; j < iterator.length; j++) {
-            if (iterator[i][j].className === 'bomb') {
-                smallArray.push(iterator[i][j]);
+    for (let i = 0; i < boxes.length; i++) {
+        for (let j = 0; j < boxes.length; j++) {
+            if (boxes[i][j].className === 'bomb') {
+                smallArray.push(boxes[i][j]);
             } else {
-                iterator[i][j].style.backgroundColor = 'black';
-                iterator[i][j].style.cursor = 'default';
-                iterator[i][j].textContent = ' ';
+                boxes[i][j].style.backgroundColor = 'black';
+                boxes[i][j].style.cursor = 'default';
+                boxes[i][j].textContent = ' ';
             }
         }
     }
 }
 
 let i = 0;
-
 function explosionTime() {
     setTimeout(function() {
         if (smallArray[i].textContent === '💣') {
@@ -306,6 +418,7 @@ score.style.width = main.style.width;
 
 dropDown.addEventListener('click', function() {
     gameOver = false;
+    firstClick = true;
     removeSquares();
     makeSquares(main, squareAmount, setIds, generateBombs);
     timesToClick = squareAmount - gameSettings.bombs;
