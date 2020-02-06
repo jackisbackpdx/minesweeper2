@@ -169,7 +169,6 @@ function setIds() {
         }
     }
 }
-
 let winCount = 0;
 let lossCount = 0;
 
@@ -262,7 +261,7 @@ function detectBombs() {
                         timesToClick--;
                     }
                 }
-                if (firstClick && j > 0 && boxes[i - 1][j].className !== 'bomb') {
+                if (firstClick && i > 0 && boxes[i - 1][j].className !== 'bomb') {
                     if (boxes[i - 1][j].classList.contains('0')) {
                         boxes[i - 1][j].style.backgroundColor = 'darkSeaGreen';
                         boxes[i - 1][j].textContent = '';
@@ -274,7 +273,7 @@ function detectBombs() {
                         timesToClick--;
                     }
                 }
-                if (firstClick && j > 0 && i > boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
+                if (firstClick && j < boxes.length && i > 0 && boxes[i - 1][j + 1].className !== 'bomb') {
                     if (boxes[i - 1][j + 1].classList.contains('0')) {
                         boxes[i - 1][j + 1].style.backgroundColor = 'darkSeaGreen';
                         boxes[i - 1][j + 1].textContent = '';
@@ -285,38 +284,39 @@ function detectBombs() {
                         boxes[i - 1][j + 1].style.backgroundColor = 'green';
                         timesToClick--;
                     }
-                    firstClick = false;
                 }
-                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
-                    if (boxes[i][j + 1].classList.contains('0')) {
-                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
-                        boxes[i][j + 1].textContent = '';
+                if (firstClick && j < boxes.length - 1 && i < boxes.length - 1 && boxes[i + 1][j + 1].className !== 'bomb') {
+                    if (boxes[i + 1][j + 1].classList.contains('0')) {
+                        boxes[i + 1][j + 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i + 1][j + 1].textContent = '';
+                        timesToClick--;
                     } else {
-                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
-                        boxes[i][j + 1].classList.add('clicked');
-                        boxes[i][j + 1].style.backgroundColor = 'green';
+                        boxes[i + 1][j + 1].textContent = boxes[i + 1][j + 1].className;
+                        boxes[i + 1][j + 1].classList.add('clicked');
+                        boxes[i + 1][j + 1].style.backgroundColor = 'green';
+                        timesToClick--;
                     }
-                    firstClick = false;
                 }
-                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
-                    if (boxes[i][j + 1].classList.contains('0')) {
-                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
-                        boxes[i][j + 1].textContent = '';
+                if (firstClick && i < boxes.length - 1 && j > 0 && boxes[i + 1][j - 1].className !== 'bomb') {
+                    if (boxes[i + 1][j - 1].classList.contains('0')) {
+                        boxes[i + 1][j - 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i + 1][j - 1].textContent = '';
+                        timesToClick--;
                     } else {
-                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
-                        boxes[i][j + 1].classList.add('clicked');
-                        boxes[i][j + 1].style.backgroundColor = 'green';
+                        boxes[i + 1][j - 1].textContent = boxes[i + 1][j - 1].className;
+                        boxes[i + 1][j - 1].classList.add('clicked');
+                        boxes[i + 1][j - 1].style.backgroundColor = 'green';
+                        timesToClick--;
                     }
-                    firstClick = false;
                 }
-                if (firstClick && j < boxes.length - 1 && boxes[i][j + 1].className !== 'bomb') {
-                    if (boxes[i][j + 1].classList.contains('0')) {
-                        boxes[i][j + 1].style.backgroundColor = 'darkSeaGreen';
-                        boxes[i][j + 1].textContent = '';
+                if (firstClick && j < boxes.length - 1 && boxes[i][j - 1].className !== 'bomb') {
+                    if (boxes[i][j - 1].classList.contains('0')) {
+                        boxes[i][j - 1].style.backgroundColor = 'darkSeaGreen';
+                        boxes[i][j - 1].textContent = '';
                     } else {
-                        boxes[i][j + 1].textContent = boxes[i][j + 1].className;
-                        boxes[i][j + 1].classList.add('clicked');
-                        boxes[i][j + 1].style.backgroundColor = 'green';
+                        boxes[i][j - 1].textContent = boxes[i][j - 1].className;
+                        boxes[i][j - 1].classList.add('clicked');
+                        boxes[i][j - 1].style.backgroundColor = 'green';
                     }
                     firstClick = false;
                 }
@@ -333,6 +333,7 @@ function detectBombs() {
                 }
                 if (num > 0) {
                     boxes[i][j].textContent = num;
+                    firstClick = false;
                 }
                 if (boxes[i][j].className === 'bomb') {
                     boxes[i][j].textContent = '💣';
