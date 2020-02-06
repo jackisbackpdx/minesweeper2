@@ -169,7 +169,6 @@ function setIds() {
         }
     }
 }
-console.log(boxes);
 let winCount = 0;
 let lossCount = 0;
 
@@ -352,7 +351,6 @@ function detectBombs() {
                 if (timesToClick > 0 && boxes[i][j].className !== 'bomb' && gameOver === false && !(boxes[i][j].classList.contains('clicked'))) {
                     timesToClick--;
                     firstClick = false;
-                    console.log(timesToClick);
                 }
                 if (num === 0 && boxes[i][j].className !== 'bomb' && boxes[i][j].style.backgroundColor !== 'black' && boxes[i][j].className !== 'clear') {
                     boxes[i][j].textContent = '';
