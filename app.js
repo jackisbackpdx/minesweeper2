@@ -20,6 +20,51 @@ let row8 = [];
 const selectedDropDown = document.getElementById('difficulty');
 const main = document.querySelector('main');
 
+const styleDropDown = document.getElementById('colors');
+
+let style;
+
+function divHover(element, color) {
+    element.style.backgroundColor = color;
+    console.log(element);
+    console.log(color);
+}
+
+styleDropDown.addEventListener('change',
+    function() {
+        let body = document.querySelector('body');
+        let header = document.querySelector('header');
+        let main = document.querySelector('main');
+        let divs = main.children;
+
+        style = this.value;
+        console.log(style);
+        if (style === 'beach') {
+            main.style.backgroundColor = '#83dfe3';
+            body.style.backgroundColor = '#f3cfa4';
+            header.style.backgroundColor = '#efdedf';
+            for (let i = 0; i < divs.length; i++) {
+                divs[i].style.backgroundColor = '#268f8e';
+            }
+        }
+        if (style === 'cave') {
+            main.style.backgroundColor = 'lightcoral';
+            body.style.backgroundColor = 'purple';
+            header.style.backgroundColor = 'darkorchid';
+            for (let i = 0; i < divs.length; i++) {
+                console.log(divs[i]);
+                divs[i].style.backgroundColor = 'beige';
+                divs[i].addEventListener('mouseenter', function() {
+                    divs[i].style.backgroundColor = 'LightCoral';
+                });
+                divs[i].addEventListener('mouseleave', function() {
+                    divs[i].style.backgroundColor = 'beige';
+                });
+            }
+        }
+    }
+);
+
 main.style.width = '280px';
 main.style.height = '280px';
 
