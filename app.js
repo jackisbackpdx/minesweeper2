@@ -17,7 +17,7 @@ let row6 = [];
 let row7 = [];
 let row8 = [];
 
-const selectedDropDown = document.querySelector('select');
+const selectedDropDown = document.getElementById('difficulty');
 const main = document.querySelector('main');
 
 main.style.width = '280px';
@@ -314,6 +314,7 @@ function detectBombs() {
                         boxes[i][j - 1].style.backgroundColor = 'darkSeaGreen';
                         boxes[i][j - 1].textContent = '';
                     } else {
+                        console.log(boxes[i][j - 1].classList[1])
                         boxes[i][j - 1].textContent = boxes[i][j - 1].className;
                         boxes[i][j - 1].classList.add('clicked');
                         boxes[i][j - 1].style.backgroundColor = 'green';
@@ -423,4 +424,18 @@ dropDown.addEventListener('click', function() {
     removeSquares();
     makeSquares(main, squareAmount, setIds, generateBombs);
     timesToClick = squareAmount - gameSettings.bombs;
+});
+
+let colors = document.getElementById('colors');
+
+let squares = document.querySelectorAll('div');
+
+colors.addEventListener('change', function() {
+    let color = this.value;
+    if (color === 'red') {
+        for (let i = 0; i < squares.length; i++) {
+            squares[i].style.backgroundColor = 'red';
+
+        }
+    }
 });

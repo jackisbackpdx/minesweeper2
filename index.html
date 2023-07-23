@@ -12,7 +12,7 @@
 
 <body>
     <video autoplay muted loop>
-        <source src='../never-ending-geometry.mp4' type='video/mp4'>
+        <source type='video/mp4'>
     </video>
         <header>
             <h1>Minesweeper</h1>
@@ -25,13 +25,19 @@
         </summary>
         <main>
         </main>
-    <select>
+    <select id='difficulty'>
         <option value='0'>Easy</option>
         <option value='1'>Medium</option>
         <option value='2'>Hard</option>
         <option value='3'>Legendary</option>
     </select>
     <button>Reset</button>
+    <select id='colors'>
+        <option value="cave">Cave</option>
+        <option value="beach">Beach</option>
+        <option value="neon">Neon</option>
+        <option value="red">Red</option>
+    </select>
     <script type="module" src="./app.js"></script>
 </body>
 
